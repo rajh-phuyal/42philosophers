@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:21 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/06 02:05:37 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/06 02:11:58 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int	valid_inputs(int argc, char **argv)
 	while (i < argc)
 	{
 		if (!no_random_chars(argv[i]) || ft_atoi(argv[i]) <= 1)
-			return (0);
+			return (false);
 		i++;
 	}
-	return (1);
+	return (true);
 }
