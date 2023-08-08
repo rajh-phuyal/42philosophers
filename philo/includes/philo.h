@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 19:39:35 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/08 22:43:53 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@
 # define PHILONODE 0
 
 // philo states
-# define IDLE -1
-# define DEAD 0
-# define EATING 1
+# define IDLE 0
+# define DEAD 1
+# define EATING 2
 # define SLEEPING 3
 # define THINKING 4
 
@@ -56,11 +56,12 @@ typedef struct s_host
 // so the placement of the philos and forks are maintained
 typedef struct s_table
 {
+	int				id;
 	int				type;
 	int				meals;
 	int				state;
 	pthread_mutex_t	*key;
-	pthread_mutex_t	fork;
+	pthread_mutex_t	lock;
 	struct timeval	time;
 	struct s_table	*left;
 	struct s_table	*right;
@@ -71,16 +72,16 @@ typedef struct s_table
 int		ft_atoi(const char *str);
 int		valid_inputs(int argc, char **argv);
 void	print_params(t_host *host, bool table);
-void	destroy_all_mutexes(t_host *host, t_table *node);
 int		initialization(t_host *host, char **argv, bool max_meal);
 
 // main program functions
+void	*host_cycle(void *arg);
 void	*philo_cycle(void *arg);
 void	threads_init(t_host *host);
 void	mutexes(t_host *host, int start, bool create);
 
 // node functions
-int		create_new(t_host *host, t_table **head, int type);
+int		create_new(t_host *host, t_table **head, int type, int id);
 
 // liberate everything allocated
 void	liberation(t_host *host);

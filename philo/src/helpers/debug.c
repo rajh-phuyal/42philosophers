@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:24:06 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 19:42:26 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/08 22:30:44 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	print_table(t_table *head, t_table *start)
 	while (true)
 	{
 		printf("=======================\n");
+		printf("ID: %d\n", start->id);
 		if (start->type == FORKNODE)
 			printf("FORK NODE\n");
 		else

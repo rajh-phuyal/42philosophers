@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:43:26 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 19:43:47 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/08 22:43:35 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,13 @@ bool	param_validation(int count, char **params)
 
 int	main(int argc, char **argv)
 {
-	t_host			host;
+	t_host	host;
 
 	if (param_validation(argc, argv))
 		return (1);
 	if (!initialization(&host, argv, (argc - 5)))
 		return (printf("Initialization failed!\n"));
 	threads_init(&host);
-	destroy_all_mutexes(&host, (host.table)->left);
 	liberation(&host);
 	return (0);
 }
