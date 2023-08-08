@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   freedom.c                                          :+:      :+:    :+:   */
+/*   liberation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:12:01 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 02:14:04 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/08 18:07:50 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-void	freedom(t_philo *philo)
+void	liberation(t_host *host)
 {
-	if (philo->forks)
-		free(philo->forks);
-	if (philo->threads)
-		free(philo->threads);
+	if (host->threads)
+		free(host->threads);
 }

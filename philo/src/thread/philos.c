@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 02:27:23 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/08 16:53:26 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,9 @@
 
 void	*philo_cycle(void *arg)
 {
-	t_philo	*philo;
+	t_table	*self;
 
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->mutex);
-	printf("Philosopher inside mutex executed!!\n");
-	pthread_mutex_unlock(&philo->mutex);
-	printf("Philosopher outside mutex executed!!\n");
+	self = (t_table *)arg;
+	printf("Philosopher cycle executed | state: %d!!\n", self->state);
 	return (NULL);
 }

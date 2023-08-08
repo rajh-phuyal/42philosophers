@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 02:31:06 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/08 19:39:35 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,32 +21,68 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
-# define EAT 1
-# define DIE 4
-# define FORK 0
-# define SLEEP 2
-# define THINK 3
+// int arr size to send to processes
+# define IVAL 3
 
-typedef struct s_philo
+// types of nodes in table
+# define FORKNODE 1
+# define PHILONODE 0
+
+// philo states
+# define IDLE -1
+# define DEAD 0
+# define EATING 1
+# define SLEEPING 3
+# define THINKING 4
+
+// the host is the main struct that holds all the data
+// it holds the params, the threads, the mutexes and the table
+// the table is a circular linked list
+typedef struct s_host
 {
-	int				to_eat;
 	int				to_die;
+	int				to_eat;
 	int				to_sleep;
 	int				p_count;
 	int				max_meals;
 	pthread_t		*threads;
-	pthread_mutex_t	mutex;
-	pthread_mutex_t	*forks;
-}	t_philo;
+	struct s_table	*table;
+	pthread_mutex_t	print_key;
+}	t_host;
 
+// each node of the table represent a philo or a fork
+// philo nodes have a fork node on their left and right
+// fork nodes have a philo node on their left and right
+// so the placement of the philos and forks are maintained
+typedef struct s_table
+{
+	int				type;
+	int				meals;
+	int				state;
+	pthread_mutex_t	*key;
+	pthread_mutex_t	fork;
+	struct timeval	time;
+	struct s_table	*left;
+	struct s_table	*right;
+	int				ivals[IVAL];
+}	t_table;
+
+// parsing and param
 int		ft_atoi(const char *str);
 int		valid_inputs(int argc, char **argv);
-void	save_inputs(t_philo *philo, char **argv, bool max_meal);
+void	print_params(t_host *host, bool table);
+void	destroy_all_mutexes(t_host *host, t_table *node);
+int		initialization(t_host *host, char **argv, bool max_meal);
 
-void	*philo_cycle(void *philo);
-void	mutexes_initialization(t_philo *philo, int start);
-void	threads_initialization(t_philo *philo, int start);
+// main program functions
+void	*philo_cycle(void *arg);
+void	threads_init(t_host *host);
+void	mutexes(t_host *host, int start, bool create);
 
-void	liberation(t_philo *philo);
+// node functions
+int		create_new(t_host *host, t_table **head, int type);
+
+// liberate everything allocated
+void	liberation(t_host *host);
 
 #endif

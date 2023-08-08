@@ -6,7 +6,7 @@
 #    By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 02:00:58 by rphuyal           #+#    #+#              #
-#    Updated: 2023/08/08 02:31:16 by rphuyal          ###   ########.fr        #
+#    Updated: 2023/08/08 19:34:21 by rphuyal          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,8 @@ SRC = src/core/main.c \
 		src/core/initialization.c \
 		src/thread/philos.c \
 		src/helpers/ft_atoi.c \
+		src/helpers/nodes.c \
+		src/helpers/debug.c \
 		src/helpers/liberation.c \
 
 OBJ   = $(patsubst src/%.c, obj/%.o, $(SRC))
