@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validation.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/06 01:47:21 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/07 22:07:18 by rphuyal          ###   ########.fr       */
+/*   Created: 2023/08/06 15:05:01 by rphuyal           #+#    #+#             */
+/*   Updated: 2023/08/06 15:05:26 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-bool	no_random_chars(char *str)
+int	ft_atoi(const char *str)
 {
-	while (*str)
-	{
-		if (*str < '0' || *str > '9')
-			return (false);
-		str++;
-	}
-	return (true);
-}
+	size_t	i;
+	size_t	result;
+	size_t	sign;
 
-int	valid_inputs(int argc, char **argv)
-{
-	int	i;
-
-	i = 1;
-	while (i < argc)
+	i = 0;
+	result = 0;
+	sign = 1;
+	while (str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == 32))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (!no_random_chars(argv[i])
-			|| ft_atoi(argv[i]) < 1)
-			return (false);
+		if (str[i] == '-')
+			sign = -1;
 		i++;
 	}
-	return (true);
+	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
+		result = (result * 10) + (str[i++] - 48);
+	if (i > 19 || result >= ULLONG_MAX)
+		return (0);
+	return (result * sign);
 }
