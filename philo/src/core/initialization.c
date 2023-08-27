@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 22:43:50 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 18:43:17 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 	host->to_die = ft_atoi(argv[2]);
 	host->to_eat = ft_atoi(argv[3]);
 	host->to_sleep = ft_atoi(argv[4]);
+	host->to_think = ft_atoi(argv[5]);
 	if (max_meal)
 		host->max_meals = ft_atoi(argv[5]);
 	else
@@ -39,7 +40,8 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 	host->table = NULL;
 	if (!create_table(host))
 		return (0);
-	pthread_mutex_init(&host->print_key, NULL);
+	pthread_mutex_init(&host->key, NULL);
+	host->start_time = get_current_time();
 	return (1);
 }
 
@@ -57,5 +59,7 @@ void	threads_init(t_host *host)
 			NULL, &philo_cycle, (void *)(host->table));
 		host->table = (host->table->left)->left;
 	}
+	while (--start >= 0)
+		pthread_join(host->threads[start], NULL);
 	pthread_join(h_thread, NULL);
 }

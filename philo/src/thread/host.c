@@ -6,26 +6,31 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 22:51:59 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 19:03:47 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-void	check_node_status(t_host *host, t_table *head, t_table *iter)
+void	check_node_status(t_host *self, t_table *head, t_table *iter)
 {
 	int	m_count;
 
 	m_count = 0;
 	while (true)
 	{
-		if (head == iter && m_count == host->max_meals)
+		if (head == iter && m_count == self->max_meals)
 			break ;
 		if (head == iter)
+		{
+			pthread_mutex_lock(&self->key);
+			self->total_meals = m_count;
+			pthread_mutex_unlock(&self->key);
 			m_count = 0;
+		}
 		if (iter->state == DEAD)
 		{
-			printf("%d died\n", iter->id);
+			printf("%d dieddddd\n", iter->id);
 			break ;
 		}
 		m_count += iter->meals;
@@ -35,9 +40,9 @@ void	check_node_status(t_host *host, t_table *head, t_table *iter)
 
 void	*host_cycle(void *arg)
 {
-	t_host	*host;
+	t_host	*self;
 
-	host = (t_host *)arg;
-	check_node_status(host, host->table, host->table);
+	self = (t_host *)arg;
+	check_node_status(self, self->table, self->table);
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/08 22:43:53 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 18:50:52 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@
 # include <pthread.h>
 # include <stdbool.h>
 # include <sys/time.h>
+# include <stdint.h>
 
 // int arr size to send to processes
-# define IVAL 3
+# define IVAL 4
 
 // types of nodes in table
 # define FORKNODE 1
@@ -43,11 +44,14 @@ typedef struct s_host
 	int				to_die;
 	int				to_eat;
 	int				to_sleep;
+	int				to_think;
 	int				p_count;
 	int				max_meals;
+	uint64_t		start_time;
+	int				total_meals;
 	pthread_t		*threads;
+	pthread_mutex_t	key;
 	struct s_table	*table;
-	pthread_mutex_t	print_key;
 }	t_host;
 
 // each node of the table represent a philo or a fork
@@ -60,30 +64,36 @@ typedef struct s_table
 	int				type;
 	int				meals;
 	int				state;
-	pthread_mutex_t	*key;
 	pthread_mutex_t	lock;
 	struct timeval	time;
 	struct s_table	*left;
 	struct s_table	*right;
+	struct s_host	*host;
+	uint64_t		last_meal;
 	int				ivals[IVAL];
 }	t_table;
 
 // parsing and param
-int		ft_atoi(const char *str);
-int		valid_inputs(int argc, char **argv);
-void	print_params(t_host *host, bool table);
-int		initialization(t_host *host, char **argv, bool max_meal);
+int			ft_atoi(const char *str);
+int			valid_inputs(int argc, char **argv);
+void		print_params(t_host *host, bool table);
+int			initialization(t_host *host, char **argv, bool max_meal);
 
 // main program functions
-void	*host_cycle(void *arg);
-void	*philo_cycle(void *arg);
-void	threads_init(t_host *host);
-void	mutexes(t_host *host, int start, bool create);
+void		*host_cycle(void *arg);
+void		*philo_cycle(void *arg);
+void		threads_init(t_host *host);
+void		mutexes(t_host *host, int start, bool create);
+
+
+// time
+uint64_t	get_current_time(void);
+int			sleep_phases(useconds_t ms);
 
 // node functions
-int		create_new(t_host *host, t_table **head, int type, int id);
+int			create_new(t_host *host, t_table **head, int type, int id);
 
 // liberate everything allocated
-void	liberation(t_host *host);
+void		liberation(t_host *host);
 
 #endif

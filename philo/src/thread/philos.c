@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/26 14:17:27 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 18:59:37 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,72 @@
 
 void	announcement(t_table *self, char *msg)
 {
-	pthread_mutex_lock(self->key);
-	printf("%d %d %s\n", gettimeofday(&self->time, NULL) * 1000, self->id, msg);
-	pthread_mutex_unlock(self->key);
+	uint64_t	diff;
+
+	diff = get_current_time() - self->host->start_time;
+	pthread_mutex_lock(&self->host->key);
+	printf("%llu %d %s\n", diff, self->id, msg);
+	pthread_mutex_unlock(&self->host->key);
+}
+
+void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
+{
+	pthread_mutex_unlock(&self->lock);
+	pthread_mutex_lock(&right->lock);
+	announcement(self, "has taken a fork");
+	pthread_mutex_lock(&left->lock);
+	announcement(self, "has taken a fork");
+	self->last_meal = get_current_time();
+	announcement(self, "is eating");
+	self->state = EATING;
+	self->meals++;
+	sleep_phases(e_time);
+	pthread_mutex_unlock(&right->lock);
+	pthread_mutex_unlock(&left->lock);
+}
+
+void	go_to_bed(t_table *self)
+{
+	int	s_time;
+
+	announcement(self, "is sleeping");
+	pthread_mutex_lock(&self->lock);
+	s_time = self->ivals[2];
+	self->state = SLEEPING;
+	pthread_mutex_unlock(&self->lock);
+	sleep_phases(s_time);
+}
+
+void	contemplate(t_table *self)
+{
+	int	c_time;
+
+	announcement(self, "is thinking");
+	pthread_mutex_lock(&self->lock);
+	c_time = self->ivals[3];
+	self->state = THINKING;
+	pthread_mutex_unlock(&self->lock);
+	sleep_phases(c_time);
 }
 
 void	*philo_cycle(void *arg)
 {
-	unsigned long	time;
 	t_table			*self;
 
 	self = (t_table *)arg;
 	while (true)
 	{
 		pthread_mutex_lock(&self->lock);
-		announcement(self, "is sleeping");
-		self->state = SLEEPING;
-		time = self->ivals[0];
-		pthread_mutex_unlock(&self->lock);
-		usleep(time);
+		try_eating(self, self->left, self->right, self->ivals[1]);
 		pthread_mutex_lock(&self->lock);
-		announcement(self, "died");
-		self->state = DEAD;
-		pthread_mutex_unlock(&self->lock);
 		if (self->state == DEAD)
+		{
+			announcement(self, "died");
 			break ;
-		pthread_mutex_lock(&self->lock);
-		announcement(self, "is eating");
-		self->meals++;
-		self->state = EATING;
-		time = self->ivals[1];
+		}
 		pthread_mutex_unlock(&self->lock);
-		usleep(time);
+		go_to_bed(self);
+		contemplate(self);
 	}
 	return (NULL);
 }

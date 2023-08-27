@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   liberation.c                                       :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/08 02:12:01 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 18:55:45 by rphuyal          ###   ########.fr       */
+/*   Created: 2023/08/27 17:00:51 by rphuyal           #+#    #+#             */
+/*   Updated: 2023/08/27 17:15:06 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-void	free_all_pariticpants(t_table *head)
+uint64_t	get_current_time(void)
 {
-	t_table	*temp;
+	struct timeval	time;
 
-	temp = head;
-	head->right->left = NULL;
-	while (head)
-	{
-		pthread_mutex_destroy(&head->lock);
-		temp = head->left;
-		free(head);
-		head = temp;
-	}
+	if (gettimeofday(&time, NULL) == -1)
+		write(2, "gettimeofday() error\n", 22);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-void	liberation(t_host *host)
+int	sleep_phases(useconds_t ms)
 {
-	if (host->threads)
-		free(host->threads);
-	if (host->table)
-		free_all_pariticpants(host->table);
-	pthread_mutex_destroy(&host->key);
+	uint64_t	start;
+
+	start = get_current_time();
+	while ((get_current_time() - start) < ms)
+		usleep(ms / 10);
+	return (0);
 }
