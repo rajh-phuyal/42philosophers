@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:43:26 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 17:35:24 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 20:36:26 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	main(int argc, char **argv)
 		return (1);
 	if (!initialization(&host, argv, (argc - 5)))
 		return (printf("Initialization failed!\n"));
-	print_params(&host, true);
 	threads_init(&host);
 	liberation(&host);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 18:59:37 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/28 10:12:39 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ void	announcement(t_table *self, char *msg)
 
 	diff = get_current_time() - self->host->start_time;
 	pthread_mutex_lock(&self->host->key);
+	pthread_mutex_lock(&self->lock);
 	printf("%llu %d %s\n", diff, self->id, msg);
+	pthread_mutex_unlock(&self->lock);
 	pthread_mutex_unlock(&self->host->key);
 }
 
@@ -50,23 +52,13 @@ void	go_to_bed(t_table *self)
 	sleep_phases(s_time);
 }
 
-void	contemplate(t_table *self)
-{
-	int	c_time;
-
-	announcement(self, "is thinking");
-	pthread_mutex_lock(&self->lock);
-	c_time = self->ivals[3];
-	self->state = THINKING;
-	pthread_mutex_unlock(&self->lock);
-	sleep_phases(c_time);
-}
-
 void	*philo_cycle(void *arg)
 {
 	t_table			*self;
 
 	self = (t_table *)arg;
+	if (self->id % 2 == 0)
+		usleep(30);
 	while (true)
 	{
 		pthread_mutex_lock(&self->lock);
@@ -79,7 +71,9 @@ void	*philo_cycle(void *arg)
 		}
 		pthread_mutex_unlock(&self->lock);
 		go_to_bed(self);
-		contemplate(self);
+		if (self->state == IDLE)
+			break ;
+		announcement(self, "is thinking");
 	}
 	return (NULL);
 }

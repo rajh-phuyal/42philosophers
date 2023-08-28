@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 18:50:52 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/28 10:04:31 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef struct s_host
 	int				to_die;
 	int				to_eat;
 	int				to_sleep;
-	int				to_think;
 	int				p_count;
 	int				max_meals;
 	uint64_t		start_time;

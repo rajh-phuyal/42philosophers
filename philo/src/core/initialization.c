@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 18:43:17 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 19:13:04 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 	host->to_die = ft_atoi(argv[2]);
 	host->to_eat = ft_atoi(argv[3]);
 	host->to_sleep = ft_atoi(argv[4]);
-	host->to_think = ft_atoi(argv[5]);
 	if (max_meal)
 		host->max_meals = ft_atoi(argv[5]);
 	else

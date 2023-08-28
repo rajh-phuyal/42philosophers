@@ -6,35 +6,56 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 19:03:47 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/28 10:12:18 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-void	check_node_status(t_host *self, t_table *head, t_table *iter)
+uint64_t	get_diff(uint64_t start, uint64_t last)
 {
-	int	m_count;
+	if (last > 0)
+		return (get_current_time() - last);
+	else
+		return (get_current_time() - start);
+}
 
-	m_count = 0;
+void	send_stop_signal(t_table *head)
+{
+	pthread_mutex_lock(&head->lock);
+	while (head->left != head)
+	{
+		head = head->left;
+		head->state = DEAD;
+		pthread_mutex_unlock(&head->lock);
+	}
+}
+
+void	check_node_status(t_host *self, t_table *node)
+{
+	uint64_t	diff;
+
 	while (true)
 	{
-		if (head == iter && m_count == self->max_meals)
+		if (node->state == DEAD)
 			break ;
-		if (head == iter)
+		diff = get_diff(self->start_time, node->last_meal);
+		if (node->state != EATING && diff > (uint64_t)node->ivals[0])
 		{
-			pthread_mutex_lock(&self->key);
-			self->total_meals = m_count;
-			pthread_mutex_unlock(&self->key);
-			m_count = 0;
-		}
-		if (iter->state == DEAD)
-		{
-			printf("%d dieddddd\n", iter->id);
+			pthread_mutex_lock(&node->lock);
+			node->state = DEAD;
+			send_stop_signal(self->table);
+			pthread_mutex_unlock(&node->lock);
 			break ;
 		}
-		m_count += iter->meals;
-		iter = iter->left;
+		if (node->meals == self->max_meals)
+		{
+			pthread_mutex_lock(&node->lock);
+			printf("Philosopher %d has eaten %d times\n", node->id, node->meals);
+			node->state = IDLE;
+			pthread_mutex_unlock(&node->lock);
+		}
+		node = node->left;
 	}
 }
 
@@ -43,6 +64,6 @@ void	*host_cycle(void *arg)
 	t_host	*self;
 
 	self = (t_host *)arg;
-	check_node_status(self, self->table, self->table);
+	check_node_status(self, self->table);
 	return (NULL);
 }

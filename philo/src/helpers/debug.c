@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:24:06 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 18:56:43 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/27 20:36:33 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	print_table(t_table *head, t_table *start)
 
 void	print_ivals(int *ivals, int start)
 {
-	while (start < 4)
+	while (start < 3)
 	{
 		printf("ivals[%d]: %d\n", start, ivals[start]);
 		start++;
@@ -57,7 +57,6 @@ void	print_params(t_host *host, bool table)
 	printf("Time to die: %d\n", host->to_die);
 	printf("Time to eat: %d\n", host->to_eat);
 	printf("Time to sleep: %d\n", host->to_sleep);
-	printf("Time to think: %d\n", host->to_think);
 	printf("Max meals: %d\n", host->max_meals);
 	printf("Start time: %llu\n", host->start_time);
 	if (table)
