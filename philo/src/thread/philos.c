@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/28 10:12:39 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/28 20:23:55 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,14 +61,14 @@ void	*philo_cycle(void *arg)
 		usleep(30);
 	while (true)
 	{
-		pthread_mutex_lock(&self->lock);
-		try_eating(self, self->left, self->right, self->ivals[1]);
-		pthread_mutex_lock(&self->lock);
 		if (self->state == DEAD)
 		{
 			announcement(self, "died");
 			break ;
 		}
+		pthread_mutex_lock(&self->lock);
+		try_eating(self, self->left, self->right, self->ivals[1]);
+		pthread_mutex_lock(&self->lock);
 		pthread_mutex_unlock(&self->lock);
 		go_to_bed(self);
 		if (self->state == IDLE)

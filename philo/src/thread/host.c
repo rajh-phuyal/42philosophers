@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/28 10:12:18 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/08/28 20:24:44 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	check_node_status(t_host *self, t_table *node)
 			pthread_mutex_unlock(&node->lock);
 		}
 		node = node->left;
+		printf("here\n");
 	}
 }
 
