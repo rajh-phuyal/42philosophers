@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/27 19:13:04 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/03 18:34:01 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,16 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 void	threads_init(t_host *host)
 {
 	int			start;
-	pthread_t	h_thread;
 
 	start = -1;
 	host->threads = malloc(sizeof(pthread_t) * host->p_count);
-	pthread_create(&h_thread, NULL, &host_cycle, (void *)host);
 	while (++start < host->p_count)
 	{
 		pthread_create(&host->threads[start],
 			NULL, &philo_cycle, (void *)(host->table));
 		host->table = (host->table->left)->left;
 	}
-	while (--start >= 0)
-		pthread_join(host->threads[start], NULL);
-	pthread_join(h_thread, NULL);
+	// while (--start >= 0)
+	// 	pthread_join(host->threads[start], NULL);
+	check_node_status(host, host->table);
 }

@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/28 10:04:31 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/03 18:24:06 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 // philo states
 # define IDLE 0
 # define DEAD 1
+# define EXIT -1
 # define EATING 2
 # define SLEEPING 3
 # define THINKING 4
@@ -82,7 +83,7 @@ int			initialization(t_host *host, char **argv, bool max_meal);
 void		*host_cycle(void *arg);
 void		*philo_cycle(void *arg);
 void		threads_init(t_host *host);
-void		mutexes(t_host *host, int start, bool create);
+void		check_node_status(t_host *self, t_table *node);
 
 
 // time
