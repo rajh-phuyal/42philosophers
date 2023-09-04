@@ -6,7 +6,7 @@
 #    By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 02:00:58 by rphuyal           #+#    #+#              #
-#    Updated: 2023/09/04 17:12:20 by rphuyal          ###   ########.fr        #
+#    Updated: 2023/09/04 20:15:43 by rphuyal          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME  = philo
 
 CC    = @cc
 
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=address -pthread
+FLAGS = -Wall -Wextra -Werror -g -fsanitize=thread -pthread
 
 SRC = src/core/main.c \
 		src/core/validation.c \

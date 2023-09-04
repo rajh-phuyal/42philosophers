@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 16:55:39 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 18:48:51 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	announcement(t_table *self, char *msg)
 	pthread_mutex_lock(&self->lock);
 	diff = get_current_time() - self->host->start_time;
 	if (self->state != DEAD && self->state != EXIT)
-		printf("%lu %d %s\n", diff, self->id, msg);
+		printf("%llu %d %s\n", diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 	pthread_mutex_unlock(&self->lock);
 }
@@ -59,10 +59,10 @@ void	single_philo(t_table *self)
 {
 	pthread_mutex_lock(&self->lock);
 	pthread_mutex_lock(&self->left->lock);
-	printf("%lu %d has taken a fork\n",
+	printf("%llu %d has taken a fork\n",
 		get_current_time() - self->host->start_time, self->id);
 	sleep_phases(self->host->to_die);
-	printf("%lu %d %s\n",
+	printf("%llu %d %s\n",
 		(get_current_time() - self->host->start_time), self->id, "died");
 	pthread_mutex_unlock(&self->left->lock);
 	pthread_mutex_unlock(&self->lock);
@@ -89,6 +89,7 @@ void	*philo_cycle(void *arg)
 		try_eating(self, self->left, self->right, self->ivals[0]);
 		go_to_bed(self);
 		announcement(self, "is thinking");
+		printf("stuck in check_node_status\n");
 	}
 	return (NULL);
 }

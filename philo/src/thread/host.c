@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 17:23:21 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 20:23:49 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ void	send_stop_signal(t_table *head, t_table *node)
 
 	while (true)
 	{
+		pthread_mutex_lock(&node->lock);
 		node->state = EXIT;
 		left = node->left;
 		if (left == head)
 			break ;
+		pthread_mutex_unlock(&node->lock);
 		node = left;
 	}
 }
@@ -47,8 +49,9 @@ void	check_node_status(t_host *self, t_table *node)
 		diff = get_diff(self->start_time, node->last_meal);
 		if (node->state != EATING && diff >= (uint64_t)self->to_die)
 		{
-			printf("%lu %d %s\n", get_current_time() - self->start_time,
+			printf("%llu %d %s\n", get_current_time() - self->start_time,
 				node->id, "died");
+			pthread_mutex_unlock(&node->lock);
 			send_stop_signal(node, node);
 			return ;
 		}
@@ -65,6 +68,8 @@ void	*host_cycle(void *arg)
 	t_host	*self;
 
 	self = (t_host *)arg;
+	pthread_mutex_lock(&self->key);
 	check_node_status(self, self->table);
+	pthread_mutex_unlock(&self->key);
 	return (NULL);
 }
