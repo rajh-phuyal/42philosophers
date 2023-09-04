@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 15:45:15 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 16:55:39 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ void	announcement(t_table *self, char *msg)
 {
 	uint64_t	diff;
 
-	diff = get_current_time() - self->host->start_time;
 	pthread_mutex_lock(&self->host->key);
 	pthread_mutex_lock(&self->lock);
+	diff = get_current_time() - self->host->start_time;
 	if (self->state != DEAD && self->state != EXIT)
-		printf("%llu %d %s\n", diff, self->id, msg);
-	pthread_mutex_unlock(&self->lock);
+		printf("%lu %d %s\n", diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
+	pthread_mutex_unlock(&self->lock);
 }
 
 void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
@@ -33,10 +33,12 @@ void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
 	pthread_mutex_lock(&left->lock);
 	announcement(self, "has taken a fork");
 	announcement(self, "is eating");
+	pthread_mutex_lock(&self->lock);
 	self->state = EATING;
 	self->meals++;
-	sleep_phases(e_time);
 	self->last_meal = get_current_time();
+	sleep_phases(e_time);
+	pthread_mutex_unlock(&self->lock);
 	pthread_mutex_unlock(&right->lock);
 	pthread_mutex_unlock(&left->lock);
 }
@@ -57,10 +59,10 @@ void	single_philo(t_table *self)
 {
 	pthread_mutex_lock(&self->lock);
 	pthread_mutex_lock(&self->left->lock);
-	printf("%llu %d has taken a fork\n",
+	printf("%lu %d has taken a fork\n",
 		get_current_time() - self->host->start_time, self->id);
-	sleep_phases(self->ivals[0]);
-	printf("%llu %d %s\n",
+	sleep_phases(self->host->to_die);
+	printf("%lu %d %s\n",
 		(get_current_time() - self->host->start_time), self->id, "died");
 	pthread_mutex_unlock(&self->left->lock);
 	pthread_mutex_unlock(&self->lock);

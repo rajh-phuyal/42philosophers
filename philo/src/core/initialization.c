@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 12:55:45 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 17:22:41 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,27 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 	return (1);
 }
 
-void	threads_init(t_host *host)
+void	threads_join(t_host *host)
 {
 	int	start;
 
 	start = -1;
+	while (++start < host->p_count)
+	{
+		if (pthread_join(host->threads[start], NULL))
+			return ;
+	}
+}
+
+void	threads_init(t_host *host)
+{
+	int			start;
+	pthread_t	h_thread;
+
+	start = -1;
 	host->threads = malloc(sizeof(pthread_t) * host->p_count);
+	if (pthread_create(&h_thread, NULL, &host_cycle, (void *)host))
+		return ;
 	host->start_time = get_current_time();
 	while (++start < host->p_count)
 	{
@@ -57,19 +72,6 @@ void	threads_init(t_host *host)
 			return ;
 		host->table = (host->table->left)->left;
 	}
-	if (host->p_count == 1)
-		return ;
-	check_node_status(host, host->table);
-}
-
-void	threads_detach(t_host *host)
-{
-	int	start;
-
-	start = -1;
-	while (++start < host->p_count)
-	{
-		if (pthread_detach(host->threads[start]))
-			return ;
-	}
+	threads_join(host);
+	pthread_join(h_thread, NULL);
 }
