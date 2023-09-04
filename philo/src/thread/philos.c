@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 13:13:52 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 15:45:15 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	go_to_bed(t_table *self)
 
 	announcement(self, "is sleeping");
 	pthread_mutex_lock(&self->lock);
-	s_time = self->ivals[2];
+	s_time = self->ivals[1];
 	self->state = SLEEPING;
 	pthread_mutex_unlock(&self->lock);
 	sleep_phases(s_time);
@@ -84,7 +84,7 @@ void	*philo_cycle(void *arg)
 		pthread_mutex_lock(&self->lock);
 		if (self->state == DEAD || self->state == EXIT)
 			return (NULL);
-		try_eating(self, self->left, self->right, self->ivals[1]);
+		try_eating(self, self->left, self->right, self->ivals[0]);
 		go_to_bed(self);
 		announcement(self, "is thinking");
 	}

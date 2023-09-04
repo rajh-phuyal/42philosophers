@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 15:49:08 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 13:02:44 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 15:41:38 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ int	create_new(t_host *host, t_table **head, int type, int id)
 	new_node->id = id;
 	new_node->last_meal = 0;
 	new_node->host = host;
-	new_node->ivals[0] = host->to_die;
-	new_node->ivals[1] = host->to_eat;
-	new_node->ivals[2] = host->to_sleep;
+	new_node->ivals[0] = host->to_eat;
+	new_node->ivals[1] = host->to_sleep;
 	return (1);
 }

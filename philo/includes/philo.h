@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 12:54:23 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 15:41:48 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <stdint.h>
 
 // int arr size to send to processes
-# define IVAL 4
+# define IVAL 2
 
 // types of nodes in table
 # define FORKNODE 1
