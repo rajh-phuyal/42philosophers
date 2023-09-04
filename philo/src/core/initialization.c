@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/03 18:34:01 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 12:55:45 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,36 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 	if (!create_table(host))
 		return (0);
 	pthread_mutex_init(&host->key, NULL);
-	host->start_time = get_current_time();
 	return (1);
 }
 
 void	threads_init(t_host *host)
 {
-	int			start;
+	int	start;
 
 	start = -1;
 	host->threads = malloc(sizeof(pthread_t) * host->p_count);
+	host->start_time = get_current_time();
 	while (++start < host->p_count)
 	{
-		pthread_create(&host->threads[start],
-			NULL, &philo_cycle, (void *)(host->table));
+		if (pthread_create(&host->threads[start],
+				NULL, &philo_cycle, (void *)(host->table)))
+			return ;
 		host->table = (host->table->left)->left;
 	}
-	// while (--start >= 0)
-	// 	pthread_join(host->threads[start], NULL);
+	if (host->p_count == 1)
+		return ;
 	check_node_status(host, host->table);
+}
+
+void	threads_detach(t_host *host)
+{
+	int	start;
+
+	start = -1;
+	while (++start < host->p_count)
+	{
+		if (pthread_detach(host->threads[start]))
+			return ;
+	}
 }

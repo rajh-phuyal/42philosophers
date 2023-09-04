@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/03 18:46:34 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 13:16:55 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ uint64_t	get_diff(uint64_t start, uint64_t last)
 	else
 		return (get_current_time() - start);
 }
-
 
 void	send_stop_signal(t_table *head, t_table *node)
 {
@@ -37,7 +36,7 @@ void	send_stop_signal(t_table *head, t_table *node)
 
 void	announce_death(uint64_t diff, int id, char *msg)
 {
-	printf("%lu %d %s\n", diff, id, msg);
+	printf("%llu %d %s\n", diff, id, msg);
 }
 
 void	check_node_status(t_host *self, t_table *node)
@@ -46,12 +45,12 @@ void	check_node_status(t_host *self, t_table *node)
 
 	while (true)
 	{
+		if (node->type == FORKNODE)
+			continue ;
 		diff = get_diff(self->start_time, node->last_meal);
-		// printf("diff: %lu\n", diff);
 		if (node->state != EATING && diff >= (uint64_t)node->ivals[0])
 		{
 			pthread_mutex_lock(&node->lock);
-			node->state = DEAD;
 			announce_death(get_current_time() - self->start_time,
 				node->id, "died");
 			pthread_mutex_unlock(&node->lock);
@@ -64,6 +63,6 @@ void	check_node_status(t_host *self, t_table *node)
 			node->state = EXIT;
 			pthread_mutex_unlock(&node->lock);
 		}
-		node = node->left;
+		node = node->left->left;
 	}
 }

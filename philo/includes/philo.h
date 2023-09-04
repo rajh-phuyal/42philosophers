@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/03 18:24:06 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 12:54:23 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int			initialization(t_host *host, char **argv, bool max_meal);
 void		*host_cycle(void *arg);
 void		*philo_cycle(void *arg);
 void		threads_init(t_host *host);
+void		threads_detach(t_host *host);
 void		check_node_status(t_host *self, t_table *node);
 
 

@@ -6,18 +6,11 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/03 18:50:54 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 13:13:52 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
-
-bool	continue_playing(int state)
-{
-	if (state == DEAD || state == EXIT)
-		return (false);
-	return (true);
-}
 
 void	announcement(t_table *self, char *msg)
 {
@@ -26,8 +19,8 @@ void	announcement(t_table *self, char *msg)
 	diff = get_current_time() - self->host->start_time;
 	pthread_mutex_lock(&self->host->key);
 	pthread_mutex_lock(&self->lock);
-	if (continue_playing(self->state))
-		printf("%lu %d %s\n", diff, self->id, msg);
+	if (self->state != DEAD && self->state != EXIT)
+		printf("%llu %d %s\n", diff, self->id, msg);
 	pthread_mutex_unlock(&self->lock);
 	pthread_mutex_unlock(&self->host->key);
 }
@@ -60,17 +53,36 @@ void	go_to_bed(t_table *self)
 	sleep_phases(s_time);
 }
 
+void	single_philo(t_table *self)
+{
+	pthread_mutex_lock(&self->lock);
+	pthread_mutex_lock(&self->left->lock);
+	printf("%llu %d has taken a fork\n",
+		get_current_time() - self->host->start_time, self->id);
+	sleep_phases(self->ivals[0]);
+	printf("%llu %d %s\n",
+		(get_current_time() - self->host->start_time), self->id, "died");
+	pthread_mutex_unlock(&self->left->lock);
+	pthread_mutex_unlock(&self->lock);
+	return ;
+}
+
 void	*philo_cycle(void *arg)
 {
 	t_table			*self;
 
 	self = (t_table *)arg;
+	if (self->host->p_count == 1)
+	{
+		single_philo(self);
+		return (NULL);
+	}
 	if (!(self->id % 2))
 		sleep_phases(20);
 	while (true)
 	{
 		pthread_mutex_lock(&self->lock);
-		if (!continue_playing(self->state))
+		if (self->state == DEAD || self->state == EXIT)
 			return (NULL);
 		try_eating(self, self->left, self->right, self->ivals[1]);
 		go_to_bed(self);

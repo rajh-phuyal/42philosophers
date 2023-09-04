@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 15:49:08 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/08/28 10:04:18 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 13:02:44 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ int	create_new(t_host *host, t_table **head, int type, int id)
 	new_node->state = IDLE;
 	connect_nodes(head, new_node);
 	pthread_mutex_init(&new_node->lock, NULL);
-	if (type == FORKNODE)
-		return (1);
 	new_node->id = id;
 	new_node->last_meal = 0;
 	new_node->host = host;
