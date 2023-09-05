@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/27 17:00:51 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/03 16:27:31 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/05 20:16:57 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,12 @@ int	sleep_phases(useconds_t ms)
 	while ((get_current_time() - start) < ms)
 		usleep(ms / 10);
 	return (0);
+}
+
+uint64_t	get_diff(uint64_t start, uint64_t last)
+{
+	if (last > 0)
+		return (get_current_time() - last);
+	else
+		return (get_current_time() - start);
 }

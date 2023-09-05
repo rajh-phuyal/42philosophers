@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 23:18:39 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/05 19:14:45 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	initialization(t_host *host, char **argv, bool max_meal)
 	else
 		host->max_meals = -1;
 	host->table = NULL;
+	host->game_over = false;
 	if (!create_table(host))
 		return (0);
 	pthread_mutex_init(&host->key, NULL);
@@ -55,23 +56,46 @@ void	threads_join(t_host *host)
 	}
 }
 
+// void	threads_init(t_host *host)
+// {
+// 	int			start;
+// 	pthread_t	h_thread;
+
+// 	start = -1;
+// 	host->threads = malloc(sizeof(pthread_t) * host->p_count);
+// 	host->start_time = get_current_time();
+// 	if (pthread_create(&h_thread, NULL, &host_cycle, (void *)host))
+// 		return ;
+// 	while (++start < host->p_count)
+// 	{
+// 		if (pthread_create(&host->threads[start],
+// 				NULL, &philo_cycle, (void *)(host->table)))
+// 			return ;
+// 		host->table = (host->table->left)->left;
+// 	}
+// 	threads_join(host);
+// 	pthread_join(h_thread, NULL);
+// }
+
 void	threads_init(t_host *host)
 {
 	int			start;
+	t_table		*temp;
 	pthread_t	h_thread;
 
 	start = -1;
 	host->threads = malloc(sizeof(pthread_t) * host->p_count);
 	host->start_time = get_current_time();
+	temp = host->table;
+	if (pthread_create(&h_thread, NULL, &host_cycle, (void *)host))
+		return ;
 	while (++start < host->p_count)
 	{
 		if (pthread_create(&host->threads[start],
-				NULL, &philo_cycle, (void *)(host->table)))
+				NULL, &philo_cycle, (void *)(temp)))
 			return ;
-		host->table = (host->table->left)->left;
+		temp = (temp->left)->left;
 	}
-	if (pthread_create(&h_thread, NULL, &host_cycle, (void *)host))
-		return ;
 	threads_join(host);
 	pthread_join(h_thread, NULL);
 }

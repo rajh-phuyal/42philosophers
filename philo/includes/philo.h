@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 16:47:59 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/05 20:17:19 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_host
 	int				to_sleep;
 	int				p_count;
 	int				max_meals;
+	bool			game_over;
 	uint64_t		start_time;
 	int				total_meals;
 	pthread_t		*threads;
@@ -83,12 +84,14 @@ int			initialization(t_host *host, char **argv, bool max_meal);
 void		*host_cycle(void *arg);
 void		*philo_cycle(void *arg);
 void		threads_init(t_host *host);
+void		*single_philo(t_table *self);
 void		check_node_status(t_host *self, t_table *node);
 
 
 // time
 uint64_t	get_current_time(void);
 int			sleep_phases(useconds_t ms);
+uint64_t	get_diff(uint64_t start, uint64_t last);
 
 // node functions
 int			create_new(t_host *host, t_table **head, int type, int id);

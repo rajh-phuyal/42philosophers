@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:24:06 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 18:47:30 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/05 14:44:01 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	print_params(t_host *host, bool table)
 	printf("Time to eat: %d\n", host->to_eat);
 	printf("Time to sleep: %d\n", host->to_sleep);
 	printf("Max meals: %d\n", host->max_meals);
-	printf("Start time: %llu\n", host->start_time);
+	printf("Start time: %lu\n", host->start_time);
 	if (table)
 	{
 		printf("----------ROUND TABLE---------\n");
