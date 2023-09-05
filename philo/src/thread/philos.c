@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 18:48:51 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/05 12:11:46 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@ void	announcement(t_table *self, char *msg)
 	uint64_t	diff;
 
 	pthread_mutex_lock(&self->host->key);
-	pthread_mutex_lock(&self->lock);
 	diff = get_current_time() - self->host->start_time;
 	if (self->state != DEAD && self->state != EXIT)
 		printf("%llu %d %s\n", diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
-	pthread_mutex_unlock(&self->lock);
 }
 
 void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
@@ -85,11 +83,14 @@ void	*philo_cycle(void *arg)
 	{
 		pthread_mutex_lock(&self->lock);
 		if (self->state == DEAD || self->state == EXIT)
+		{
+			printf("philo %d is returning\n", self->id);
 			return (NULL);
+		}
 		try_eating(self, self->left, self->right, self->ivals[0]);
 		go_to_bed(self);
 		announcement(self, "is thinking");
-		printf("stuck in check_node_status\n");
 	}
+	printf("philo %d is returning\n", self->id);
 	return (NULL);
 }

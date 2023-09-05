@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 20:23:49 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/05 12:12:23 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,10 @@ void	send_stop_signal(t_table *head, t_table *node)
 
 	while (true)
 	{
-		pthread_mutex_lock(&node->lock);
 		node->state = EXIT;
 		left = node->left;
 		if (left == head)
 			break ;
-		pthread_mutex_unlock(&node->lock);
 		node = left;
 	}
 }
@@ -51,8 +49,8 @@ void	check_node_status(t_host *self, t_table *node)
 		{
 			printf("%llu %d %s\n", get_current_time() - self->start_time,
 				node->id, "died");
-			pthread_mutex_unlock(&node->lock);
 			send_stop_signal(node, node);
+			printf("host is returning\n");
 			return ;
 		}
 		if (node->meals == self->max_meals)
@@ -68,8 +66,6 @@ void	*host_cycle(void *arg)
 	t_host	*self;
 
 	self = (t_host *)arg;
-	pthread_mutex_lock(&self->key);
 	check_node_status(self, self->table);
-	pthread_mutex_unlock(&self->key);
 	return (NULL);
 }

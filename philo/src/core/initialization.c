@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 01:47:16 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/04 17:22:41 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/04 23:18:39 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ void	threads_init(t_host *host)
 
 	start = -1;
 	host->threads = malloc(sizeof(pthread_t) * host->p_count);
-	if (pthread_create(&h_thread, NULL, &host_cycle, (void *)host))
-		return ;
 	host->start_time = get_current_time();
 	while (++start < host->p_count)
 	{
@@ -72,6 +70,8 @@ void	threads_init(t_host *host)
 			return ;
 		host->table = (host->table->left)->left;
 	}
+	if (pthread_create(&h_thread, NULL, &host_cycle, (void *)host))
+		return ;
 	threads_join(host);
 	pthread_join(h_thread, NULL);
 }
