@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/05 21:59:52 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/06 01:06:02 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,19 @@ void	send_stop_signal(t_host *host)
 	pthread_mutex_unlock(&host->key);
 }
 
-// void	empty_spagetti_bowl(t_table *host)
-// {
-// 	return ;
-// }
+bool	everybody_full(t_host *host, int meals_count)
+{
+	if (host->max_meals > 0 && \
+		meals_count == (host->p_count * host->max_meals))
+	{
+		send_stop_signal(host);
+		printf("All philosophers are full!\n");
+		return (true);
+	}
+	return (false);
+}
 
-bool	starvation(t_table *host, t_table *node)
+bool	starvation(t_host *host, t_table *node)
 {
 	uint64_t	diff;
 
@@ -32,7 +39,7 @@ bool	starvation(t_table *host, t_table *node)
 	if (node->state != EATING && diff >= (uint64_t)host->to_die)
 	{
 		send_stop_signal(host);
-		printf("%lu %d %s\n", get_current_time() - host->start_time,
+		printf("%llu %d %s\n", get_current_time() - host->start_time,
 			node->id, "died");
 		pthread_mutex_unlock(&node->lock);
 		return (true);
@@ -44,8 +51,8 @@ void	check_node_status(t_host *self, t_table *node)
 {
 	t_table		*next;
 	int			meals_count;
-	uint64_t	diff;
 
+	meals_count = 0;
 	while (true)
 	{
 		pthread_mutex_lock(&node->lock);
@@ -53,16 +60,14 @@ void	check_node_status(t_host *self, t_table *node)
 			continue ;
 		if (starvation(self, node))
 			return ;
-		meals_count += node->meals;
 		if (node->meals == self->max_meals)
 			node->state = EXIT;
+		meals_count += node->meals;
+		if (everybody_full(self, meals_count))
+			return ;
 		next = node->left->left;
-		if (next == host->table)
-		{
-			if (empty_spagetti_bowl(host, meals_count))
-				return ;
-			meals_count = 0
-		}
+		if (next == self->table)
+			meals_count = 0;
 		pthread_mutex_unlock(&node->lock);
 		node = next;
 	}

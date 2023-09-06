@@ -6,7 +6,7 @@
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/05 20:15:29 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/06 01:02:47 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 bool	is_game_over(t_host *host)
 {
-	bool	grab;
+	bool	state;
 
 	pthread_mutex_lock(&host->key);
-	grab = host->game_over;
+	state = host->game_over;
 	pthread_mutex_unlock(&host->key);
-	return (grab);
+	return (state);
 }
 
 void	announcement(t_table *self, char *msg)
@@ -29,7 +29,7 @@ void	announcement(t_table *self, char *msg)
 	pthread_mutex_lock(&self->host->key);
 	diff = get_current_time() - self->host->start_time;
 	if (!self->host->game_over && self->state != EXIT)
-		printf("%lu %d %s\n", diff, self->id, msg);
+		printf("%llu %d %s\n", diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 }
 
@@ -76,8 +76,13 @@ void	*philo_cycle(void *arg)
 		if (is_game_over(self->host))
 			break ;
 		try_eating(self, self->left, self->right, self->ivals[0]);
+		pthread_mutex_lock(&self->lock);
 		if (is_game_over(self->host) || self->state == EXIT)
+		{
+			pthread_mutex_unlock(&self->lock);
 			break ;
+		}
+		pthread_mutex_unlock(&self->lock);
 		go_to_bed(self);
 		if (is_game_over(self->host))
 			break ;
