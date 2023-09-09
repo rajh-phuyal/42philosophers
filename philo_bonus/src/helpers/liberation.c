@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   liberation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/06 15:05:01 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/09 03:35:17 by rphuyal          ###   ########.fr       */
+/*   Created: 2023/08/08 02:12:01 by rphuyal           #+#    #+#             */
+/*   Updated: 2023/08/27 18:55:45 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-int	ft_atoi(const char *str)
+void	free_all_pariticpants(t_table *head)
 {
-	size_t	i;
-	size_t	result;
-	size_t	sign;
+	t_table	*temp;
 
-	i = 0;
-	result = 0;
-	sign = 1;
-	while (str[i] && ((str[i] >= 9 && str[i] <= 13) || str[i] == 32))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	temp = head;
+	head->right->left = NULL;
+	while (head)
 	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
+		pthread_mutex_destroy(&head->lock);
+		temp = head->left;
+		free(head);
+		head = temp;
 	}
-	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
-		result = (result * 10) + (str[i++] - 48);
-	if (i > 19 || result >= ULLONG_MAX)
-		return (0);
-	return (result * sign);
+}
+
+void	liberation(t_host *host)
+{
+	if (host->threads)
+		free(host->threads);
+	if (host->table)
+		free_all_pariticpants(host->table);
+	pthread_mutex_destroy(&host->key);
 }
