@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+         #
+#    By: rphuyal <rphuyal@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 02:00:58 by rphuyal           #+#    #+#              #
-#    Updated: 2023/09/09 02:54:16 by rphuyal          ###   ########.fr        #
+#    Updated: 2023/09/09 18:51:31 by rphuyal          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRC = src/core/main.c \
 		src/thread/philos.c \
 		src/thread/host.c \
 		src/thread/single.c \
+		src/thread/utils.c \
 		src/helpers/time.c \
 		src/helpers/ft_atoi.c \
 		src/helpers/nodes.c \

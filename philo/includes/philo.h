@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/09 03:35:08 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/09 18:52:04 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,9 @@ int			initialization(t_host *host, char **argv, bool max_meal);
 void		*host_cycle(void *arg);
 void		*philo_cycle(void *arg);
 void		threads_init(t_host *host);
+bool		is_game_over(t_host *host);
 void		*single_philo(t_table *self);
+void		send_stop_signal(t_host *host);
 void		check_node_status(t_host *self, t_table *node);
 
 // time

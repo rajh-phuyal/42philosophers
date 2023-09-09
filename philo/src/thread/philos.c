@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   philos.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/09 03:19:08 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/09 19:37:10 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
-
-bool	is_game_over(t_host *host)
-{
-	bool	state;
-
-	pthread_mutex_lock(&host->key);
-	state = host->game_over;
-	pthread_mutex_unlock(&host->key);
-	return (state);
-}
 
 void	announcement(t_table *self, char *msg, char *color)
 {
@@ -29,26 +19,26 @@ void	announcement(t_table *self, char *msg, char *color)
 	pthread_mutex_lock(&self->host->key);
 	diff = get_current_time() - self->host->start_time;
 	if (!self->host->game_over && self->state != EXIT)
-		printf("%s%llu %d %s\n\033[0m", color, diff, self->id, msg);
+		printf("%s%lu %d %s\n\033[0m", color, diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 }
 
+void	swap_order(t_table **left, t_table **right)
+{
+	t_table	*temp;
+
+	temp = *left;
+	*left = *right;
+	*right = temp;
+}
 void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
 {
-	if (self->id % 2)
-	{
-		pthread_mutex_lock(&right->lock);
-		announcement(self, "has taken a right fork", "");
-		pthread_mutex_lock(&left->lock);
-		announcement(self, "has taken a left fork", "");
-	}
-	else
-	{
-		pthread_mutex_lock(&left->lock);
-		announcement(self, "has taken a left fork", "");
-		pthread_mutex_lock(&right->lock);
-		announcement(self, "has taken a right fork", "");
-	}
+	if ((self->id % 2))
+		swap_order(&left, &right);
+	pthread_mutex_lock(&left->lock);
+	announcement(self, "has taken a fork", "\033[97m");
+	pthread_mutex_lock(&right->lock);
+	announcement(self, "has taken a fork", "\033[97m");
 	announcement(self, "is eating", "\033[92m");
 	pthread_mutex_lock(&self->lock);
 	self->state = EATING;
@@ -56,8 +46,8 @@ void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
 	self->last_meal = get_current_time();
 	pthread_mutex_unlock(&self->lock);
 	sleep_phases(e_time);
-	pthread_mutex_unlock(&left->lock);
 	pthread_mutex_unlock(&right->lock);
+	pthread_mutex_unlock(&left->lock);
 }
 
 void	go_to_bed(t_table *self)
@@ -79,6 +69,8 @@ void	*philo_cycle(void *arg)
 	self = (t_table *)arg;
 	if (self->host->p_count == 1)
 		return (single_philo(self));
+	if (!(self->id % 2))
+		sleep_phases(20);
 	while (true)
 	{
 		if (is_game_over(self->host))

@@ -3,29 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   host.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/09 03:19:19 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/09 18:47:41 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/philo.h"
 
-void	send_stop_signal(t_host *host)
-{
-	pthread_mutex_lock(&host->key);
-	host->game_over = true;
-	pthread_mutex_unlock(&host->key);
-}
-
-bool	everybody_full(t_host *host, int meals_count)
+bool	everybody_full(t_host *host, t_table *node, int meals_count)
 {
 	if (host->max_meals > 0 && \
 		meals_count == (host->p_count * host->max_meals))
 	{
 		send_stop_signal(host);
-		printf("\033[92mAll philosophers are full!\n\033[0m");
+		pthread_mutex_unlock(&node->lock);
 		return (true);
 	}
 	return (false);
@@ -39,7 +32,7 @@ bool	starvation(t_host *host, t_table *node)
 	if (node->state != EATING && diff >= (uint64_t)host->to_die)
 	{
 		send_stop_signal(host);
-		printf("\033[91m%llu %d %s\n\033[0m",
+		printf("\033[91m%lu %d %s\n\033[0m",
 			get_current_time() - host->start_time, node->id, "died");
 		pthread_mutex_unlock(&node->lock);
 		return (true);
@@ -63,7 +56,7 @@ void	check_node_status(t_host *self, t_table *node)
 		if (node->meals == self->max_meals)
 			node->state = EXIT;
 		meals_count += node->meals;
-		if (everybody_full(self, meals_count))
+		if (everybody_full(self, node, meals_count))
 			return ;
 		next = node->left->left;
 		if (next == self->table)
