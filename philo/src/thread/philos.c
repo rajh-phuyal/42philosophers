@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philos.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rphuyal <rphuyal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rajphuyal <rajphuyal@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/09 19:37:10 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/11 13:59:03 by rajphuyal        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	announcement(t_table *self, char *msg, char *color)
 	pthread_mutex_lock(&self->host->key);
 	diff = get_current_time() - self->host->start_time;
 	if (!self->host->game_over && self->state != EXIT)
-		printf("%s%lu %d %s\n\033[0m", color, diff, self->id, msg);
+		printf("%s%llu %d %s\n\033[0m", color, diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 }
 
@@ -31,9 +31,11 @@ void	swap_order(t_table **left, t_table **right)
 	*left = *right;
 	*right = temp;
 }
+
 void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
 {
-	if ((self->id % 2))
+	if (((self->id % 2) && !(self->host->p_count % 2))
+		|| (!(self->id % 2) && (self->host->p_count % 2)))
 		swap_order(&left, &right);
 	pthread_mutex_lock(&left->lock);
 	announcement(self, "has taken a fork", "\033[97m");
@@ -69,8 +71,8 @@ void	*philo_cycle(void *arg)
 	self = (t_table *)arg;
 	if (self->host->p_count == 1)
 		return (single_philo(self));
-	if (!(self->id % 2))
-		sleep_phases(20);
+	// if (!(self->id % 2))
+	// 	sleep_phases(20);
 	while (true)
 	{
 		if (is_game_over(self->host))
