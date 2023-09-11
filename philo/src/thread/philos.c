@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philos.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rajphuyal <rajphuyal@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/11 17:46:19 by rajphuyal        ###   ########.fr       */
+/*   Updated: 2023/09/11 23:01:10 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,23 @@ void	announcement(t_table *self, char *msg, char *color)
 	pthread_mutex_lock(&self->host->key);
 	diff = get_current_time() - self->host->start_time;
 	if (!self->host->game_over && self->state != EXIT)
-		printf("%s%llu %d %s\n\033[0m", color, diff, self->id, msg);
+		printf("%s%lu %d %s\n\033[0m", color, diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 }
 
 void	try_eating(t_table *self, t_table *left, t_table *right, int e_time)
 {
-	if (((self->id % 2) && !(self->host->p_count % 2))
-		|| (!(self->id % 2) && (self->host->p_count % 2)))
+	if (!(self->id % 2))
 		swap_hands(&left, &right);
 	pthread_mutex_lock(&left->lock);
 	announcement(self, "has taken a fork", "\033[97m");
 	pthread_mutex_lock(&right->lock);
 	announcement(self, "has taken a fork", "\033[97m");
-	announcement(self, "is eating", "\033[92m");
 	pthread_mutex_lock(&self->lock);
 	self->state = EATING;
 	self->meals++;
 	self->last_meal = get_current_time();
+	announcement(self, "is eating", "\033[92m");
 	pthread_mutex_unlock(&self->lock);
 	sleep_phases(e_time);
 	pthread_mutex_unlock(&right->lock);
@@ -60,10 +59,15 @@ void	think_for_a_while(t_table *self)
 	uint64_t	to_think;
 
 	pthread_mutex_lock(&self->lock);
-	to_think = (self->ivals[2] / 6);
+	to_think = 50;
+	to_think = (self->ivals[2] / 10) * (self->ivals[2] > 100);
+	// if (to_think && ((get_current_time() - self->last_meal) + to_think) > \
+	// (uint64_t)(self->ivals[2] / 6))
+	// 	to_think = 0;
+	printf("%d to think: %lu\n", self->id, to_think);
 	announcement(self, "is thinking", "\033[93m");
 	pthread_mutex_unlock(&self->lock);
-	sleep_phases(to_think);ma
+	sleep_phases(to_think);
 }
 
 void	*philo_cycle(void *arg)
@@ -73,6 +77,8 @@ void	*philo_cycle(void *arg)
 	self = (t_table *)arg;
 	if (self->host->p_count == 1)
 		return (single_philo(self));
+	if (self->id % 2)
+		sleep_phases(20);
 	while (true)
 	{
 		if (is_game_over(self->host))
