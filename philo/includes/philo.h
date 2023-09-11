@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rphuyal <rphuyal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 18:41:27 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/09 18:52:04 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/11 17:05:06 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_table
 	struct s_table	*right;
 	struct s_host	*host;
 	uint64_t		last_meal;
-	int				ivals[2];
+	int				ivals[3];
 }	t_table;
 
 // parsing and param
@@ -84,6 +84,7 @@ void		threads_init(t_host *host);
 bool		is_game_over(t_host *host);
 void		*single_philo(t_table *self);
 void		send_stop_signal(t_host *host);
+void		swap_hands(t_table **left, t_table **right);
 void		check_node_status(t_host *self, t_table *node);
 
 // time

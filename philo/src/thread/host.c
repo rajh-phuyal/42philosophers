@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   host.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rajphuyal <rajphuyal@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 21:28:00 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/10 20:23:26 by rajphuyal        ###   ########.fr       */
+/*   Updated: 2023/09/11 14:41:43 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	starvation(t_host *host, t_table *node)
 	if (node->state != EATING && diff >= (uint64_t)host->to_die)
 	{
 		send_stop_signal(host);
-		printf("\033[91m%llu %d %s\n\033[0m",
+		printf("\033[91m%lu %d %s\n\033[0m",
 			get_current_time() - host->start_time, node->id, "died");
 		pthread_mutex_unlock(&node->lock);
 		return (true);

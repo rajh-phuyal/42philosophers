@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rajphuyal <rajphuyal@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 19:24:06 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/10 20:23:33 by rajphuyal        ###   ########.fr       */
+/*   Updated: 2023/09/11 17:05:35 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	print_table(t_table *head, t_table *start)
 
 void	print_ivals(int *ivals, int start)
 {
-	while (start < 2)
+	while (start < 3)
 	{
 		printf("ivals[%d]: %d\n", start, ivals[start]);
 		start++;
@@ -58,7 +58,7 @@ void	print_params(t_host *host, bool table)
 	printf("Time to eat: %d\n", host->to_eat);
 	printf("Time to sleep: %d\n", host->to_sleep);
 	printf("Max meals: %d\n", host->max_meals);
-	printf("Start time: %llu\n", host->start_time);
+	printf("Start time: %lu\n", host->start_time);
 	if (table)
 	{
 		printf("----------ROUND TABLE---------\n");
