@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philos.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: rajphuyal <rajphuyal@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/11 23:01:10 by rphuyal          ###   ########.fr       */
+/*   Updated: 2023/09/12 19:09:00 by rajphuyal        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	announcement(t_table *self, char *msg, char *color)
 	pthread_mutex_lock(&self->host->key);
 	diff = get_current_time() - self->host->start_time;
 	if (!self->host->game_over && self->state != EXIT)
-		printf("%s%lu %d %s\n\033[0m", color, diff, self->id, msg);
+		printf("%s%llu %d %s\n\033[0m", color, diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 }
 
@@ -56,18 +56,17 @@ void	go_to_bed(t_table *self)
 
 void	think_for_a_while(t_table *self)
 {
-	uint64_t	to_think;
+	uint64_t	time;
+	uint64_t	t_time;
 
 	pthread_mutex_lock(&self->lock);
-	to_think = 50;
-	to_think = (self->ivals[2] / 10) * (self->ivals[2] > 100);
-	// if (to_think && ((get_current_time() - self->last_meal) + to_think) > \
-	// (uint64_t)(self->ivals[2] / 6))
-	// 	to_think = 0;
-	printf("%d to think: %lu\n", self->id, to_think);
+	time = get_current_time();
+	t_time = (self->ivals[2] / 10) * (self->ivals[2] > 100);
+	if (t_time && (time + t_time) > (self->last_meal + self->ivals[2]))
+		t_time = 0;
 	announcement(self, "is thinking", "\033[93m");
 	pthread_mutex_unlock(&self->lock);
-	sleep_phases(to_think);
+	sleep_phases(t_time);
 }
 
 void	*philo_cycle(void *arg)
