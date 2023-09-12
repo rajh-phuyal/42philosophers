@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philos.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rajphuyal <rajphuyal@student.42.fr>        +#+  +:+       +#+        */
+/*   By: rphuyal <rphuyal@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:00:20 by rphuyal           #+#    #+#             */
-/*   Updated: 2023/09/12 19:09:00 by rajphuyal        ###   ########.fr       */
+/*   Updated: 2023/09/12 19:46:50 by rphuyal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	announcement(t_table *self, char *msg, char *color)
 	pthread_mutex_lock(&self->host->key);
 	diff = get_current_time() - self->host->start_time;
 	if (!self->host->game_over && self->state != EXIT)
-		printf("%s%llu %d %s\n\033[0m", color, diff, self->id, msg);
+		printf("%s%lu %d %s\n\033[0m", color, diff, self->id, msg);
 	pthread_mutex_unlock(&self->host->key);
 }
 
